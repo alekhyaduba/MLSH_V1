@@ -1,13 +1,15 @@
 import argparse
 # import tensorflow as tf
+import os.path
+
 import tensorflow.compat.v1 as tf
 parser = argparse.ArgumentParser()
-parser.add_argument('--savename', type=str, default="name")
+parser.add_argument('--savename', type=str, default="logs")
 parser.add_argument('--task', type=str, default="Particles2D-v1")
 parser.add_argument('--num_subs', type=int, default=2)
 parser.add_argument('--macro_duration', type=int, default=10)
 parser.add_argument('--num_rollouts', type=int, default=1000)
-parser.add_argument('--warmup_time', type=int,default=60)
+parser.add_argument('--warmup_time', type=int,default=60) # originally it was 60
 parser.add_argument('--train_time', type=int, default=1)
 parser.add_argument('--force_subpolicy', type=int)
 parser.add_argument('--replay', type=str, default="False")
@@ -42,7 +44,12 @@ replay = str2bool(args.replay)
 args.replay = str2bool(args.replay)
 
 RELPATH = osp.join(args.savename)
-LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
+LOGDIR = osp.join('results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
+
+if not osp.exists(LOGDIR):
+    os.umask(000)
+    os.makedirs(LOGDIR,mode=0o777)
+
 
 def callback(it):
     if MPI.COMM_WORLD.Get_rank()==0:
@@ -56,7 +63,7 @@ def callback(it):
 
 def train():
     num_timesteps=1e9
-    seed = 1401
+    seed = 1477
     rank = MPI.COMM_WORLD.Get_rank()
     sess = U.single_threaded_session()
     sess.__enter__()
@@ -83,6 +90,5 @@ def main():
     MPI.COMM_WORLD.Barrier()
     # with logger.session(dir=LOGDIR):
     train()
-
 if __name__ == '__main__':
     main()

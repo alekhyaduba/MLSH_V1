@@ -37,6 +37,8 @@ class Particles2DEnv(MetaEnv):
     # -------- MetaEnv Methods --------
     def randomizeCorrect(self):
         self.realgoal = self.np_random.uniform(-0.5, 0.5, size=2)
+
+        print(self.realgoal)
     def sample_tasks(self, num_tasks):
         """
         Tasks correspond to a goal point chosen uniformly at random.
@@ -95,7 +97,7 @@ class Particles2DEnv(MetaEnv):
         action = np.clip(action, -0.1, 0.1)
         assert self.action_space.contains(action)
         self._state = self._state + action
-
+        # print("inside step the real goal is:", self.realgoal)
         x = self._state[0] - self.realgoal[0]
         y = self._state[1] - self.realgoal[1]
         reward = -np.sqrt(x ** 2 + y ** 2)
