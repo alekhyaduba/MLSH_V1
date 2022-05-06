@@ -15,6 +15,7 @@ parser.add_argument('--force_subpolicy', type=int)
 parser.add_argument('--replay', type=str, default="False")
 parser.add_argument('-s', action='store_true')
 parser.add_argument('--continue_iter', type=str)
+parser.add_argument('--num_iterations', type=int,default=500)
 args = parser.parse_args()
 
 # python main.py --task MovementBandits-v0 --num_subs 2 --macro_duration 10 --num_rollouts 1000 --warmup_time 60 --train_time 1 --replay True test

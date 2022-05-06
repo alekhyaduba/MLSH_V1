@@ -42,7 +42,7 @@ def start(callback, args, workerseed, rank, comm):
     rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, stochastic=True, args=args)
 
 
-    for x in range(10000):
+    for x in range(args.num_iterations):
         callback(x)
         if x == 0:
             learner.syncSubpolicies()
@@ -53,7 +53,7 @@ def start(callback, args, workerseed, rank, comm):
         learner.syncMasterPolicies()
 
         env.randomizeCorrect()
-        shared_goal = comm.bcast(env.env.realgoal, root=0)
+        shared_goal = comm.bcast(env.realgoal, root=0)
         env.realgoal = shared_goal
 
         print("It is iteration %d so i'm changing the goal to %s" % (x, env.env.realgoal))
