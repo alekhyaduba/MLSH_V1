@@ -35,3 +35,9 @@ register(
     max_episode_steps=100,
     # timestep_limit=1000,
 )
+
+register(
+    id='Particles2D-v1',
+    entry_point='test_envs.envs:Particles2DEnv',
+    max_episode_steps=100
+)

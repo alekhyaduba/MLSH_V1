@@ -13,3 +13,4 @@ test_envs/envs/key_door.py
 test_envs/envs/meta_env.py
 test_envs/envs/movement_bandits.py
 test_envs/envs/movement_bandits_conv.py
+test_envs/envs/particles_2d.py
