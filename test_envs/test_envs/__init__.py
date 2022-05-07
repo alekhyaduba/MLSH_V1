@@ -41,3 +41,9 @@ register(
     entry_point='test_envs.envs:Particles2DEnv',
     max_episode_steps=100
 )
+
+register(
+    id='AntDirection-v1',
+    entry_point='test_envs.envs:AntDirectionEnv',
+    max_episode_steps=100
+)

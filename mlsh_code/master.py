@@ -11,8 +11,10 @@ import rl_algs.common.tf_util as U
 import numpy as np
 # from tinkerbell import logger
 import pickle
+from datetime import datetime
 
 def start(callback, args, workerseed, rank, comm):
+    time_start = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     env = gym.make(args.task)
     env.seed(workerseed)
     np.random.seed(workerseed)
@@ -41,7 +43,7 @@ def start(callback, args, workerseed, rank, comm):
     learner = Learner(env, policy, old_policy, sub_policies, old_sub_policies, comm, clip_param=0.2, entcoeff=0, optim_epochs=10, optim_stepsize=3e-5, optim_batchsize=64)
     rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, stochastic=True, args=args)
 
-
+    out_list = []
     for x in range(args.num_iterations):
         callback(x)
         if x == 0:
@@ -53,7 +55,7 @@ def start(callback, args, workerseed, rank, comm):
         learner.syncMasterPolicies()
 
         env.randomizeCorrect()
-        shared_goal = comm.bcast(env.realgoal, root=0)
+        shared_goal = comm.bcast(env.env.realgoal, root=0)
         env.realgoal = shared_goal
 
         print("It is iteration %d so i'm changing the goal to %s" % (x, env.env.realgoal))
@@ -78,5 +80,7 @@ def start(callback, args, workerseed, rank, comm):
             print(("%d: global: %s, local: %s" % (mini_ep, gmean, lmean)))
             if args.s:
                 totalmeans.append(gmean)
-                with open('outfile'+str(x)+'.pickle', 'wb') as fp:
-                    pickle.dump(totalmeans, fp)
+        if args.s:
+            out_list.append(np.array(totalmeans).mean())
+        with open('outfile' + time_start + '.pickle', 'wb') as fp:
+            pickle.dump(out_list, fp)

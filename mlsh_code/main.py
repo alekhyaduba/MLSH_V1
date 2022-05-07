@@ -5,7 +5,7 @@ import os.path
 import tensorflow.compat.v1 as tf
 parser = argparse.ArgumentParser()
 parser.add_argument('--savename', type=str, default="logs")
-parser.add_argument('--task', type=str, default="Particles2D-v1")
+parser.add_argument('--task', type=str, default="AntDirection-v1")
 parser.add_argument('--num_subs', type=int, default=2)
 parser.add_argument('--macro_duration', type=int, default=10)
 parser.add_argument('--num_rollouts', type=int, default=1000)
@@ -13,11 +13,12 @@ parser.add_argument('--warmup_time', type=int,default=60) # originally it was 60
 parser.add_argument('--train_time', type=int, default=1)
 parser.add_argument('--force_subpolicy', type=int)
 parser.add_argument('--replay', type=str, default="False")
-parser.add_argument('-s', action='store_true')
+parser.add_argument('-s', action='store_true', default= "True")
 parser.add_argument('--continue_iter', type=str)
-parser.add_argument('--num_iterations', type=int,default=500)
+parser.add_argument('--num_iterations', type=int,default=1000)
 args = parser.parse_args()
 
+# export PYTHONPATH=$PYTHONPATH:/home/nitin/code/rl/project/MLSH_V1/rl-algs:/home/nitin/code/rl/project/MLSH_V1/gym
 # python main.py --task MovementBandits-v0 --num_subs 2 --macro_duration 10 --num_rollouts 1000 --warmup_time 60 --train_time 1 --replay True test
 
 from mpi4py import MPI
@@ -43,6 +44,7 @@ def str2bool(v):
 
 replay = str2bool(args.replay)
 args.replay = str2bool(args.replay)
+args.s = str2bool(args.s)
 
 RELPATH = osp.join(args.savename)
 LOGDIR = osp.join('results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
