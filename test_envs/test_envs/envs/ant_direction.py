@@ -40,11 +40,12 @@ class AntDirectionEnv(MetaEnv, MujocoEnv, gym.utils.EzPickle):
     """
 
     def __init__(self, task=None):
-        MetaEnv.__init__(self, task)
-        MujocoEnv.__init__(self, 'ant.xml', 5)
         gym.utils.EzPickle.__init__(self)
         self.realgoal = np.random.normal(size=2)
         self.realgoal /= np.linalg.norm(self.realgoal)[...,np.newaxis]
+        MetaEnv.__init__(self, task)
+        MujocoEnv.__init__(self, 'ant.xml', 5)
+
 
     # -------- MetaEnv Methods --------
     def set_task(self, task):
