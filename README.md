@@ -1,3 +1,5 @@
+THIS IS A COPY OF ORIGINAL WORK WITH ADDED ENVIRONMENTS FOR TESTING.
+
 **Status:** Archive (code is provided as-is, no updates expected)
 
 # Meta-Learning Shared Hierarchies
